@@ -2,7 +2,7 @@
 require_once 'config.php';
 
 /**
- * Regjistron një user të ri (si customer me role_id=2)
+ * Regjistron nje user të ri (si customer me role_id=2)
  */
 function registerUser($email, $password) {
     global $pdo;
@@ -18,7 +18,7 @@ function registerUser($email, $password) {
 }
 
 /**
- * Bën login: kthen array(user) përfshirë emrin e rolit, ose false
+ * Ben login: kthen array(user) perfshire emrin e rolit, ose false
  */
 function loginUser($email, $password) {
     global $pdo;
@@ -38,7 +38,7 @@ function loginUser($email, $password) {
 }
 
 /**
- * Dërgon email për rikuperim fjalëkalimi
+ * Dergon email per rikuperim
  */
 function sendPasswordReset($email) {
     global $pdo;
@@ -70,7 +70,7 @@ function sendPasswordReset($email) {
 }
 
 /**
- * Verifikon token-in dhe kthen ID-në e user-it
+ * Verifikon token dhe kthen ID e user-it
  */
 function verifyToken($token) {
     global $pdo;
@@ -84,7 +84,7 @@ function verifyToken($token) {
 }
 
 /**
- * Rivendos fjalëkalimin
+ * Rivendos fjalekalimin
  */
 function resetPassword($userId, $newPassword) {
     global $pdo;
@@ -103,7 +103,7 @@ function resetPassword($userId, $newPassword) {
 }
 
 /**
- * Kthen të dhënat e user-it (përfshirë role)
+ * Kthen të dhenat e user
  */
 function getUserById($id) {
     global $pdo;
