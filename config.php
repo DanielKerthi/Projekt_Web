@@ -2,9 +2,9 @@
 session_start();
 
 define('DB_HOST','localhost');
-define('DB_NAME','myapp');
-define('DB_USER','dbuser');
-define('DB_PASS','dbpass');
+define('DB_NAME','JeremyFragrance');
+define('DB_USER','root');
+define('DB_PASS','');
 
 try {
     $pdo = new PDO(

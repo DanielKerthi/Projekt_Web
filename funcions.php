@@ -1,6 +1,6 @@
 <?php
 require_once 'config.php';
-
+date_default_timezone_set('Europe/Tirane');
 /**
  * Regjistron nje user të ri (si customer me role_id=2)
  */
@@ -8,7 +8,7 @@ function registerUser($email, $password) {
     global $pdo;
     $hash = password_hash($password, PASSWORD_DEFAULT);
     $stmt = $pdo->prepare("
-        INSERT INTO users (email, password, role_id)
+        INSERT INTO perdorues (email, password, role_id)
         VALUES (:email, :password, 2)
     ");
     return $stmt->execute([
@@ -24,8 +24,8 @@ function loginUser($email, $password) {
     global $pdo;
     $stmt = $pdo->prepare("
         SELECT u.id, u.email, u.password, r.name AS role
-        FROM users u
-        JOIN roles r ON u.role_id = r.id
+        FROM perdorues u
+        JOIN Rolet r ON u.role_id = r.id
         WHERE u.email = :email
     ");
     $stmt->execute([':email' => $email]);
@@ -42,7 +42,7 @@ function loginUser($email, $password) {
  */
 function sendPasswordReset($email) {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT id FROM users WHERE email = :email");
+    $stmt = $pdo->prepare("SELECT id FROM perdorues WHERE email = :email");
     $stmt->execute([':email' => $email]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$row) {
@@ -53,7 +53,7 @@ function sendPasswordReset($email) {
     $expires = date('Y-m-d H:i:s', time() + 3600);
 
     $upd = $pdo->prepare("
-        UPDATE users
+        UPDATE perdorues
         SET reset_token = :token, reset_expires = :expires
         WHERE id = :id
     ");
@@ -63,7 +63,7 @@ function sendPasswordReset($email) {
         ':id'      => $row['id'],
     ]);
 
-    $link    = "http://tuadomen.com/reset-password.php?token=$token";
+    $link    = "http://localhost/Projekt_Web-main/reset-password.php?token=$token";
     $subject = "Rikuperim Fjalëkalimi";
     $message = "Kliko këtu për të rivendosur fjalëkalimin: $link";
     return mail($email, $subject, $message);
@@ -75,7 +75,7 @@ function sendPasswordReset($email) {
 function verifyToken($token) {
     global $pdo;
     $stmt = $pdo->prepare("
-        SELECT id FROM users
+        SELECT id FROM perdorues
         WHERE reset_token = :token
           AND reset_expires > NOW()
     ");
@@ -90,7 +90,7 @@ function resetPassword($userId, $newPassword) {
     global $pdo;
     $hash = password_hash($newPassword, PASSWORD_DEFAULT);
     $stmt = $pdo->prepare("
-        UPDATE users
+        UPDATE perdorues
         SET password      = :password,
             reset_token   = NULL,
             reset_expires = NULL
@@ -109,8 +109,8 @@ function getUserById($id) {
     global $pdo;
     $stmt = $pdo->prepare("
         SELECT u.id, u.email, r.name AS role
-        FROM users u
-        JOIN roles r ON u.role_id = r.id
+        FROM perdorues u
+        JOIN Rolet r ON u.role_id = r.id
         WHERE u.id = :id
     ");
     $stmt->execute([':id' => $id]);
