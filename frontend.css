@@ -1,106 +1,153 @@
 
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .container {
-    background-color: #fff;
-    padding: 30px 25px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-  }
-  
-  .page-title {
-    text-align: center;
-    margin-bottom: 25px;
-    font-size: 24px;
-    color: #333;
-  }
-  
-  .form {
-    display: flex;
-    flex-direction: column;
-  }
-  
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  .form-group {
-    margin-bottom: 15px;
-  }
+body {
+  display: flex;
+  flex-direction: column;      
+  justify-content: center;     
+  align-items: center;          
+  font-family: Arial, sans-serif;
+  background-color: #f0f2f5;
+  color: #333;
+  line-height: 1.5;
+}
 
-  label {
-    font-size: 14px;
-    margin-bottom: 5px;
-    display: block;
-    color: #555;
-  }
-  
-  .form-control {
-    width: 100%;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .btn {
-    padding: 10px;
-    font-size: 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .btn-primary {
-    background-color: #3498db;
-    color: white;
-    transition: background-color 0.3s;
-  }
-  
-  .btn-primary:hover {
-    background-color: #2980b9;
-  }
-  
-  .helper-text {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #666;
-  }
-  
-  .helper-text a {
-    color: #3498db;
-    text-decoration: none;
-  }
-  
-  .helper-text a:hover {
-    text-decoration: underline;
-  }
-  
-  .links {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #666;
-  }
-  
-  .links a {
-    color: #3498db;
-    text-decoration: none;
-  }
-  
-  .links a:hover {
-    text-decoration: underline;
-  }
+
+.top-bar {
+  width: 100%;
+  max-width: 500px;
+  background-color: #f5f5f5;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.top-bar h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+
+.container {
+  width: 100%;
+  max-width: 500px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 30px 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.page-title,
+.container > h1,
+.container > h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+p {
+  margin-bottom: 15px;
+}
+
+
+ul {
+  list-style: none;
+}
+ul li {
+  margin-bottom: 15px;
+}
+
+
+.btn {
+  display: inline-block;   
+  width: auto;            
+  padding: 8px 16px;      
+  font-size: 14px;        
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn + .btn {
+  margin-top: 10px;
+  margin-left: 0;         
+}
+
+
+.container, 
+.customer-actions,
+form {
+  text-align: center;      
+}
+
+.container .btn + .btn,
+.customer-actions li .btn + .btn,
+form button + button {
+  margin-left: 10px;       
+}
+
+
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+
+form#logout-form,
+form[action="index.php"] {
+  margin-top: 20px;
+}
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+
+.form-control {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0,123,255,0.2);
+}

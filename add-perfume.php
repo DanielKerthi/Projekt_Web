@@ -1,44 +1,43 @@
 <?php
-require 'functions.php';
 session_start();
+require 'functions.php';
 
-// Check if the user is an admin
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    die("Jo e autorizuar.");
+    header('Location: index.php');
+    exit();
 }
 
-// Handle file upload
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $emri = $_POST['emri'];
-    $marka = $_POST['marka'];
-    $kategori = $_POST['id_kategori'];
-    $cmimi = $_POST['cmimi'];
+global $pdo;
 
-    // Check if the file was uploaded without errors
-    if (isset($_FILES['img']) && $_FILES['img']['error'] === UPLOAD_ERR_OK) {
-        $img_tmp = $_FILES['img']['tmp_name'];
-        $img_name = basename($_FILES['img']['name']);
-        $img_path = 'foto/' . $img_name; // Save the image in 'foto' directory
+$emri = $_POST['emri'] ?? '';
+$marka = $_POST['marka'] ?? '';
+$id_kategori = $_POST['id_kategori'] ?? '';
+$cmimi = $_POST['cmimi'] ?? '';
+$pershkrimi = $_POST['pershkrimi'] ?? '';
 
-        // Move the uploaded file to the correct directory
-        if (move_uploaded_file($img_tmp, $img_path)) {
-            // File uploaded successfully
-            // Insert data into the database with the image filename
-            $stmt = $pdo->prepare("INSERT INTO Produkti (emri, marka, id_kategori, cmimi, img) VALUES (:emri, :marka, :id_kategori, :cmimi, :img)");
-            $stmt->bindParam(':emri', $emri, PDO::PARAM_STR);
-            $stmt->bindParam(':marka', $marka, PDO::PARAM_STR);
-            $stmt->bindParam(':id_kategori', $kategori, PDO::PARAM_INT);
-            $stmt->bindParam(':cmimi', $cmimi, PDO::PARAM_STR);
-            $stmt->bindParam(':img', $img_name, PDO::PARAM_STR); // Save the image filename
-
-            $stmt->execute();
-            header("Location: index.php"); // Redirect after successful upload
-            exit;
-        } else {
-            die("Gabim në ngarkimin e fotos.");
-        }
+$img = '';
+if (!empty($_FILES['img']['name'])) {
+    $targetDir = "foto/";
+    $targetFile = $targetDir . basename($_FILES["img"]["name"]);
+    if (move_uploaded_file($_FILES["img"]["tmp_name"], $targetFile)) {
+        $img = $_FILES["img"]["name"];
     } else {
-        die("Gabim me ngarkimin e fotos.");
     }
+}
+
+try {
+    $stmt = $pdo->prepare("INSERT INTO Produkti (emri, marka, id_kategori, cmimi, img, pershkrimi) VALUES (:emri, :marka, :id_kategori, :cmimi, :img, :pershkrimi)");
+    $stmt->bindParam(':emri', $emri);
+    $stmt->bindParam(':marka', $marka);
+    $stmt->bindParam(':id_kategori', $id_kategori, PDO::PARAM_INT);
+    $stmt->bindParam(':cmimi', $cmimi);
+    $stmt->bindParam(':img', $img);
+    $stmt->bindParam(':pershkrimi', $pershkrimi);
+    $stmt->execute();
+
+    header('Location: index.php');
+    exit();
+} catch (PDOException $e) {
+    echo "Gabim në shtimin e parfumit: " . $e->getMessage();
 }
 ?>

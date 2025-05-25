@@ -179,9 +179,95 @@ function getParfumes() {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 function getPerfumeById($id) {
-    global $pdo;  // Assuming you have a $pdo object for the database connection
+    global $pdo;  
     $stmt = $pdo->prepare("SELECT * FROM Produkti WHERE id_produkti = :id_produkti");
     $stmt->bindParam(':id_produkti', $id, PDO::PARAM_INT);
     $stmt->execute();
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+function getCategoryName($categoryId) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT emri FROM Kategoria WHERE id_kategori = ?");
+    $stmt->execute([$categoryId]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row ? $row['emri'] : 'e panjohur';
+}
+/////////////////////////////////////////////////////////////////////
+
+
+if (!isset($_SESSION['user_id']) || !is_numeric($_SESSION['user_id'])) {
+    if (isset($_GET['add_to_cart'])) {
+        header('Location: login.html?prompt='
+            . urlencode('Duhet të jesh i loguar që të shtosh në shportë'));
+        exit;
+    }
+    return;
+}
+
+$userId = (int) $_SESSION['user_id'];
+
+$stmt = $pdo->prepare("SELECT id_cart FROM cart WHERE id_perdorues = ?");
+$stmt->execute([$userId]);
+$cartId = $stmt->fetchColumn();
+
+if (!$cartId) {
+    $pdo
+      ->prepare("INSERT INTO cart (id_perdorues) VALUES (?)")
+      ->execute([$userId]);
+    $cartId = $pdo->lastInsertId();
+}
+
+if (isset($_GET['add_to_cart']) && is_numeric($_GET['add_to_cart'])) {
+    $prodId = (int) $_GET['add_to_cart'];
+
+    $roleStmt = $pdo->prepare("SELECT role_id FROM Perdorues WHERE id = ?");
+    $roleStmt->execute([$userId]);
+    $roleId = (int) $roleStmt->fetchColumn();
+    if ($roleId === 1) {
+        header("Location: perfume.php?id={$prodId}");
+        exit;
+    }
+
+    $sel = $pdo->prepare("
+      SELECT sasia
+        FROM cart_items
+       WHERE id_cart = ?
+         AND id_produkti = ?
+    ");
+    $sel->execute([$cartId, $prodId]);
+    $row = $sel->fetch();
+
+    if ($row) {
+        $newQty = $row['sasia'] + 1;
+        $pdo->prepare("
+          UPDATE cart_items
+             SET sasia = ?
+           WHERE id_cart = ?
+             AND id_produkti = ?
+        ")->execute([$newQty, $cartId, $prodId]);
+    } else {
+        $pdo->prepare("
+          INSERT INTO cart_items (id_cart, id_produkti, sasia)
+               VALUES (?, ?, 1)
+        ")->execute([$cartId, $prodId]);
+    }
+
+    $sum = $pdo->prepare("
+      SELECT SUM(ci.sasia * p.cmimi)
+        FROM cart_items ci
+        JOIN Produkti p ON ci.id_produkti = p.id_produkti
+       WHERE ci.id_cart = ?
+    ");
+    $sum->execute([$cartId]);
+    $total = $sum->fetchColumn() ?: 0.00;
+
+    $pdo
+      ->prepare("UPDATE cart SET cmimi_cart = ? WHERE id_cart = ?")
+      ->execute([$total, $cartId]);
+
+    $base = strtok($_SERVER['REQUEST_URI'], '?');
+    header("Location: {$base}?id={$prodId}");
+    exit;
+}
+
+/////////////////////////
