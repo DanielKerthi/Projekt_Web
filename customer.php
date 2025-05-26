@@ -1,12 +1,11 @@
 <?php
 require 'functions.php';
 
-// Siguro që eshte i loguar
 if (empty($_SESSION['user_id'])) {
     header('Location: login.html');
     exit;
 }
-// Nese admin, ridrejto tek `admin.php`
+
 if ($_SESSION['role'] === 'admin') {
     header('Location: admin.php');
     exit;
@@ -19,7 +18,7 @@ $user = getUserById($_SESSION['user_id']);
 <head>
   <meta charset="UTF-8">
   <title>Customer Dashboard</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="frontend.css">
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -27,12 +26,14 @@ $user = getUserById($_SESSION['user_id']);
     <h1 class="page-title">Mirësevini, <?= htmlspecialchars($user['email']) ?></h1>
     <p>Kjo është faqja juaj si Customer.</p>
     <ul class="customer-actions">
-      <li>Shiko porositë</li>
-      <li>Ndrysho profilin</li>
-      <li>Ndihmë & FAQ</li>
+
     </ul>
     <form id="logout-form" method="POST" action="logout.php">
       <button type="submit" class="btn btn-secondary">Dil</button>
+    </form>
+
+    <form action="index.php">
+      <button type="submit" class="btn btn-primary">Shko te Faqja Kryesore</button>
     </form>
   </div>
 </body>

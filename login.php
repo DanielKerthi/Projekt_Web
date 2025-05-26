@@ -1,12 +1,24 @@
 <?php
 require 'functions.php';
+session_start();
+echo"<style>
+.error {
+    color: red;
+    font-weight: bold;
+    margin-top: 20px;
+}
+.error a {
+    color: blue;
+    text-decoration: underline;
+}
+</style>";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email    = trim($_POST['identifier']);
     $password = $_POST['password'];
 
     if (!isPasswordValid($password)) {
-        echo "Fjalëkalimi duhet të ketë të paktën 8 karaktere dhe një numër. <a href='login.html'>Provo përsëri</a>.";
+        echo "<p class = 'error'> Fjalëkalimi duhet të ketë të paktën 8 karaktere dhe një numër. <a href='login.html'>Provo përsëri</a></p>.";
         exit;
     }
 
@@ -21,6 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         exit;
     } else {
-        echo "Kredencialet janë të pasakta. <a href='login.html'>Provo përsëri</a>.";
+        echo "<p class='error'> Kredencialet janë të pasakta. <a href='login.html'>Provo përsëri</a></p>.";
     }
 }

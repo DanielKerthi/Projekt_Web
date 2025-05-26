@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfume Store</title>
+  <link rel="stylesheet" href="home.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <a href="index.html"><h1>Jeremy Fragrance</h1></a>
+      </div>
+      <div class="search-login">
+        <form action="search.php" method="GET" class="search-form">
+          <input type="text" name="search" placeholder="Search perfumes..." class="search-input">
+          <button type="submit" class="search-btn">Search</button>
+        </form>
+        <div class="auth-links">
+          <a href="login.html" class="auth-link">Login</a> | <a href="register.html" class="auth-link">Register</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="category-section">
+    <div class="container">
+      <div class="category-item">
+        <a href="index.php?category=men" class="category-link">Men's Perfumes</a>
+      </div>
+      <div class="category-item">
+        <a href="index.php?category=women" class="category-link">Women's Perfumes</a>
+      </div>
+      <div class="category-item">
+        <a href="index.php?category=bestsellers" class="category-link">Best Sellers</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="products-section">
+    <div class="container">
+      <div class="product-grid">
+        <?php
+        // Display the fetched products dynamically
+        foreach ($products as $product) {
+            // Define the image path (can be set dynamically or with a default image)
+            $imagePath = 'images/products/' . $product['id_produkti'] . '.jpg';
+            if (!file_exists($imagePath)) {
+                $imagePath = 'images/products/default.jpg'; // Default image if no image exists
+            }
+            ?>
+            <div class="product-item">
+                <img src="<?= $imagePath ?>" alt="Perfume Image" class="product-image">
+                <h3 class="product-name"><?= htmlspecialchars($product['emri']) ?></h3>
+                <div class="product-brand"><?= htmlspecialchars($product['marka']) ?></div>
+                <div class="product-price">$<?= htmlspecialchars($product['cmimi']) ?></div>
+                <a href="product-detail.php?id=<?= $product['id_produkti'] ?>" class="btn-view">View Product</a>
+            </div>
+            <?php
+        }
+        ?>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Jeremy Fragrance. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
