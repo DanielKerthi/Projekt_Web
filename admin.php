@@ -1,6 +1,10 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+require 'functions.php';
+
+// Siguro që përdoruesi është i kyçur dhe ka rol admin
+if (empty($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header('Location: login.html');
     exit;
 }
@@ -24,6 +28,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 
     <form action="index.php">
       <button type="submit" class="btn btn-primary">Shko te Faqja Kryesore</button>
+    <!-- Butoni për shtimin e admin-eve të tjere -->
+    <form method="GET" action="register-admin.html" class="form" style="margin-bottom: 1em;">
+      <button type="submit" class="btn btn-primary">Shto admin të tjerë</button>
+    </form>
+
+    <!-- Butoni i daljes nga sistemi -->
+    <form id="logout-form" method="POST" action="logout.php">
+      <button type="submit" class="btn btn-secondary">Dil</button>
     </form>
   </div>
 </body>
