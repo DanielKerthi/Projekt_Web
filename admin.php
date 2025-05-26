@@ -19,8 +19,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
         <h2>Paneli i Administratorit</h2>
     <ul>
       <li><a href="register-admin.html" class="btn btn-primary">Shto Administrator të Ri</a></li>
-      <li><a href="manage-products.php" class="btn btn-primary">Menaxho Produktet</a></li>
-      <li><a href="manage-comments.php" class="btn btn-primary">Menaxho Komentet</a></li>
       <li><a href="logout.php" class="btn btn-primary">Dil</a></li>
     </ul>
 

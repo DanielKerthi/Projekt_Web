@@ -160,17 +160,32 @@ function getCategories() {
 
 function getParfumes() {
     global $pdo;
+
     $sql = "SELECT * FROM Produkti";
     $params = [];
+    $whereClauses = [];
 
     if (!empty($_GET['category'])) {
-        $sql .= " WHERE id_kategori = ?";
+        $whereClauses[] = "id_kategori = ?";
         $params[] = (int)$_GET['category'];
     } elseif (!empty($_GET['query'])) {
-        $sql .= " WHERE emri LIKE ? OR marka LIKE ?";
+        $whereClauses[] = "(emri LIKE ? OR marka LIKE ?)";
         $searchTerm = '%' . $_GET['query'] . '%';
         $params[] = $searchTerm;
         $params[] = $searchTerm;
+    }
+
+    if (!empty($whereClauses)) {
+        $sql .= " WHERE " . implode(" AND ", $whereClauses);
+    }
+
+    $validSortFields = ['emri', 'cmimi'];
+    $sortField = $_GET['sort'] ?? '';
+    $sortOrder = strtolower($_GET['order'] ?? 'asc');
+
+    if (in_array($sortField, $validSortFields)) {
+        $sortOrder = $sortOrder === 'desc' ? 'DESC' : 'ASC';
+        $sql .= " ORDER BY $sortField $sortOrder";
     }
 
     $stmt = $pdo->prepare($sql);
@@ -178,6 +193,7 @@ function getParfumes() {
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 function getPerfumeById($id) {
     global $pdo;  
     $stmt = $pdo->prepare("SELECT * FROM Produkti WHERE id_produkti = :id_produkti");

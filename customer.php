@@ -26,9 +26,7 @@ $user = getUserById($_SESSION['user_id']);
     <h1 class="page-title">Mirësevini, <?= htmlspecialchars($user['email']) ?></h1>
     <p>Kjo është faqja juaj si Customer.</p>
     <ul class="customer-actions">
-      <li><a href="#" class="btn btn-primary">Shiko porositë</a></li>
-      <li><a href="#" class="btn btn-primary">Ndrysho profilin</a></li>
-      <li><a href="#" class="btn btn-primary">Ndihmë & FAQ</a></li>
+
     </ul>
     <form id="logout-form" method="POST" action="logout.php">
       <button type="submit" class="btn btn-secondary">Dil</button>

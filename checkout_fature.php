@@ -49,37 +49,45 @@ $pdo->prepare("DELETE FROM cart_items WHERE id_cart IN (SELECT id_cart FROM cart
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="sq">
 <head>
+    <meta charset="UTF-8">
     <title>Fatura e Porosisë</title>
+    <link rel="stylesheet" href="fatura.css">
 </head>
 <body>
-    <h2>Numri i Porosisë: <?= htmlspecialchars($id_porosi) ?></h2>
-    <table border="1" cellpadding="10" cellspacing="0">
-        <tr>
-            <th>Foto</th>
-            <th>Emri</th>
-            <th>Çmimi</th>
-            <th>Sasia</th>
-            <th>Nëntotali</th>
-        </tr>
-        <?php foreach ($order_items as $item): ?>
-            <tr>
-                <td>
-                    <img src="foto/<?= htmlspecialchars($item['img']) ?>" alt="<?= htmlspecialchars($item['emri']) ?>" style="width:80px; height:auto;">
-                </td>
-                <td><?= htmlspecialchars($item['emri']) ?></td>
-                <td><?= number_format($item['cmimi'], 2) ?> €</td>
-                <td><?= $item['sasia'] ?></td>
-                <td><?= number_format($item['subtotal'], 2) ?> €</td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
-    <h3>Totali: <?= number_format($total, 2) ?> €</h3>
+    <div class="invoice-container">
+        <h2 class="invoice-title">Fatura e Porosisë #<?= htmlspecialchars($id_porosi) ?></h2>
 
-    <form method="GET" action="fatura.php">
-        <input type="hidden" name="id_porosi" value="<?= htmlspecialchars($id_porosi) ?>">
-        <button type="submit">Shkarko Faturen (PDF)</button>
-    </form>
+        <table class="invoice-table">
+            <thead>
+                <tr>
+                    <th>Foto</th>
+                    <th>Emri</th>
+                    <th>Çmimi</th>
+                    <th>Sasia</th>
+                    <th>Nëntotali</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($order_items as $item): ?>
+                    <tr>
+                        <td><img src="foto/<?= htmlspecialchars($item['img']) ?>" width="80" /></td>
+                        <td><?= htmlspecialchars($item['emri']) ?></td>
+                        <td><?= number_format($item['cmimi'], 2) ?> €</td>
+                        <td><?= $item['sasia'] ?></td>
+                        <td><?= number_format($item['subtotal'], 2) ?> €</td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        <h3 class="invoice-total">Totali: <?= number_format($total, 2) ?> €</h3>
+
+        <form method="GET" action="fatura.php" class="invoice-form">
+            <input type="hidden" name="id_porosi" value="<?= htmlspecialchars($id_porosi) ?>">
+            <button type="submit" class="download-btn">📄 Shkarko Faturën (PDF)</button>
+        </form>
+    </div>
 </body>
 </html>

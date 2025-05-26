@@ -37,10 +37,21 @@ $pdf->SetTitle('Fatura #' . $id_porosi);
 $pdf->SetMargins(15, 15, 15);
 $pdf->AddPage();
 
-$html = "<h1>Fatura e Porosisë #$id_porosi</h1>";
-$html .= "<table border=\"1\" cellpadding=\"4\">
-<tr style=\"background-color:#f2f2f2;\">
-<th>Foto</th><th>Emri</th><th>Çmimi</th><th>Sasia</th><th>Nëntotali</th></tr>";
+// Lexo CSS-in nga file
+$css = file_get_contents(__DIR__ . '/fatura_print.css');
+
+// Fillimi i HTML me CSS
+$html = '<style>' . $css . '</style>';
+$html .= '<div>
+    <h1>Fatura e Porosisë #' . $id_porosi . '</h1>
+    <table>
+        <tr>
+            <th>Foto</th>
+            <th>Emri</th>
+            <th>Çmimi</th>
+            <th>Sasia</th>
+            <th>Nëntotali</th>
+        </tr>';
 
 $total = 0;
 foreach ($order_items as $item) {
@@ -53,22 +64,25 @@ foreach ($order_items as $item) {
         $type = pathinfo($imgFile, PATHINFO_EXTENSION);
         $data = file_get_contents($imgFile);
         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-        $imgData = "<img src=\"$base64\" width=\"40\" />";
+        $imgData = "<img src=\"$base64\" />";
     }
 
-    $html .= "<tr>
-        <td>$imgData</td>
-        <td>" . htmlspecialchars($item['emri']) . "</td>
-        <td>" . number_format($item['cmimi'], 2) . " €</td>
-        <td>" . $item['quantity'] . "</td>
-        <td>" . number_format($subtotal, 2) . " €</td>
-    </tr>";
+    $html .= '<tr>
+        <td class="img-cell">' . $imgData . '</td>
+        <td>' . htmlspecialchars($item['emri']) . '</td>
+        <td>' . number_format($item['cmimi'], 2) . ' €</td>
+        <td>' . $item['quantity'] . '</td>
+        <td>' . number_format($subtotal, 2) . ' €</td>
+    </tr>';
 }
-$html .= "</table>";
-$html .= "<h3>Totali: " . number_format($total, 2) . " €</h3>";
 
+$html .= '</table>';
+$html .= '<div class="total">Totali: ' . number_format($total, 2) . ' €</div>';
+$html .= '</div>';
+
+// Shkruaj HTML në PDF
 $pdf->writeHTML($html, true, false, true, false, '');
 
 ob_end_clean(); // Pastro buffer përpara outputit të PDF
-$pdf->Output('JeremyFragrance#' . $id_porosi . '.pdf', 'D'); // 'D' për shkarkim
+$pdf->Output('JeremyFragrance#' . $id_porosi . '.pdf', 'D');
 exit;

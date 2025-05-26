@@ -1,0 +1,40 @@
+body {
+    font-family: DejaVu Sans, sans-serif;
+    color: #333;
+    background-color: #f9f9f9;
+}
+h1 {
+    color: #2c3e50;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 12px;
+}
+th {
+    background-color: #f2f2f2;
+    color: #2c3e50;
+    font-weight: bold;
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+}
+.img-cell img {
+    width: 40px;
+    height: auto;
+    border-radius: 4px;
+}
+.total {
+    margin-top: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #2c3e50;
+}
